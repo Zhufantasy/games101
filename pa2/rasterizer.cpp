@@ -157,6 +157,20 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t) {
                 continue;
             }
 
+            int count=0;
+            if(insideTriangle(i+0.25,j+0.25,v)){
+                count++;
+            }
+            if(insideTriangle(i+0.25,j+0.75,v)){
+                count++;
+            }
+            if(insideTriangle(i+0.75,j+0.25,v)){
+                count++;
+            }
+            if(insideTriangle(i+0.75,j+0.75,v)){
+                count++;
+            }
+
             auto[alpha, beta, gamma] = computeBarycentric2D(i+0.5, j+0.5, t.v);
             float w_reciprocal = 1.0/(alpha / v[0].w() + beta / v[1].w() + gamma / v[2].w());
             float z_interpolated = alpha * v[0].z() / v[0].w() + beta * v[1].z() / v[1].w() + gamma * v[2].z() / v[2].w();
@@ -166,7 +180,7 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t) {
                 continue;
             }
             depth_buf[index]=z_interpolated;
-            frame_buf[index]=t.getColor();
+            frame_buf[index]=t.getColor()*count/4;
         }
     }
     // TODO : Find out the bounding box of current triangle.
