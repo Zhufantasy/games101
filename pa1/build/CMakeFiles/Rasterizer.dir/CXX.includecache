@@ -6,15 +6,15 @@
 
 #IncludeRegexTransform: 
 
-/home/zhu/Downloads/pa1/Triangle.hpp
+/home/sqa/Downloads/games101/pa1/Triangle.hpp
 eigen3/Eigen/Eigen
 -
 
-/home/zhu/Downloads/pa1/main.cpp
+/home/sqa/Downloads/games101/pa1/main.cpp
 Triangle.hpp
-/home/zhu/Downloads/pa1/Triangle.hpp
+/home/sqa/Downloads/games101/pa1/Triangle.hpp
 rasterizer.hpp
-/home/zhu/Downloads/pa1/rasterizer.hpp
+/home/sqa/Downloads/games101/pa1/rasterizer.hpp
 eigen3/Eigen/Eigen
 -
 iostream
@@ -24,9 +24,9 @@ cmath
 opencv2/opencv.hpp
 -
 
-/home/zhu/Downloads/pa1/rasterizer.hpp
+/home/sqa/Downloads/games101/pa1/rasterizer.hpp
 Triangle.hpp
-/home/zhu/Downloads/pa1/Triangle.hpp
+/home/sqa/Downloads/games101/pa1/Triangle.hpp
 algorithm
 -
 eigen3/Eigen/Eigen
