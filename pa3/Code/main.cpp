@@ -7,6 +7,13 @@
 #include "Shader.hpp"
 #include "Texture.hpp"
 #include "OBJ_Loader.h"
+#include <algorithm>
+#include <math.h>
+
+#define max(a,b) a>b?a:b
+#define min(a,b) a<b?a:b
+
+using namespace std;
 
 Eigen::Matrix4f get_view_matrix(Eigen::Vector3f eye_pos)
 {
@@ -154,7 +161,10 @@ Eigen::Vector3f phong_fragment_shader(const fragment_shader_payload& payload)
         Vector3f diffuse=kd*(light.intensity/r/r)*max(0,payload.normal.normalized().dot((light.position-payload.view_pos).normalized()));
         //calculate the specular
         Vector3f h=((light.position-payload.view_pos)+(eye_pos-payload.view_pos)).normalized();
-        Vecto
+        Vector3f specular =ks*(light.intensity/r/r)*pow(max(0,payload.normal.dot(h)),p);
+        //calculate the ambient
+        Vector3f ambient = ka*light.intensity;
+        result_color+=(diffuse+specular+ambient);
     }
 
     return result_color * 255.f;

@@ -7,6 +7,27 @@
 #include <opencv2/opencv.hpp>
 #include <math.h>
 
+int max3(float x,float y,float z)
+{
+    if(x<y){
+        x=y;
+    }
+    if(x<z){
+        x=z;
+    }
+    return (int)floor(x);
+}
+
+int min3(float x,float y,float z)
+{
+    if(x>y){
+        x=y;
+    }
+    if(x>z){
+        x=z;
+    }
+    return (int)floor(x);
+}
 
 rst::pos_buf_id rst::rasterizer::load_positions(const std::vector<Eigen::Vector3f> &positions)
 {
@@ -287,9 +308,11 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t, const std::array<Eig
     maxY = max3(v[0].y(),v[1].y(),v[2].y());
     minY = min3(v[0].y(),v[1].y(),v[2].y());
 
+    Eigen::Vector4f tmp[]={v[0],v[1],v[2]};
+
     for(int i=minX;i<=maxX;++i){
         for(int j=minY;j<=maxY;++j){
-            if(!insideTriangle(i+0.5,j+0.5,v)){
+            if(!insideTriangle(i+0.5,j+0.5,tmp)){
                 continue;
             }
 
@@ -315,7 +338,7 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t, const std::array<Eig
             fragment_shader_payload fs_payload{interpolated_col,interpolated_nor,interpolated_texcoord,tex ? &*tex : nullptr};
             fs_payload.view_pos=interpolated_shadingpoint;
 
-            interpolated_col=fragment_shader(fragment_shader_payload);
+            interpolated_col=fragment_shader(fs_payload);
 
             depth_buf[index]=depth_screen;
             frame_buf[index]=interpolated_col;
