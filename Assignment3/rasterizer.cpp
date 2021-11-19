@@ -334,9 +334,7 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t, const std::array<Eig
             //calculate shadingpoint
             Vector3f interpolated_shadingpoint=alpha*view_pos[0]+beta*view_pos[1]+gamma*view_pos[2];
 
-            Texture *tex=t.tex;
-
-            fragment_shader_payload fs_payload{interpolated_col,interpolated_nor,interpolated_texcoord,tex ? &*tex : nullptr};
+            fragment_shader_payload fs_payload{interpolated_col,interpolated_nor,interpolated_texcoord,texture.has_value() ? &texture.value() : nullptr};
             fs_payload.view_pos=interpolated_shadingpoint;
 
             interpolated_col=fragment_shader(fs_payload);
