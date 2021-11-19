@@ -170,18 +170,37 @@ auto to_vec4(const Eigen::Vector3f& v3, float w = 1.0f)
     return Vector4f(v3.x(), v3.y(), v3.z(), w);
 }
 
-static bool insideTriangle(int x, int y, const Vector4f* _v){
-    Vector3f v[3];
-    for(int i=0;i<3;i++)
-        v[i] = {_v[i].x(),_v[i].y(), 1.0};
-    Vector3f f0,f1,f2;
-    f0 = v[1].cross(v[0]);
-    f1 = v[2].cross(v[1]);
-    f2 = v[0].cross(v[2]);
-    Vector3f p(x,y,1.);
-    if((p.dot(f0)*f0.dot(v[2])>0) && (p.dot(f1)*f1.dot(v[0])>0) && (p.dot(f2)*f2.dot(v[1])>0))
-        return true;
-    return false;
+static bool insideTriangle(int x, int y, const Vector4f* v){
+    // Vector3f v[3];
+    // for(int i=0;i<3;i++)
+    //     v[i] = {_v[i].x(),_v[i].y(), 1.0};
+    // Vector3f f0,f1,f2;
+    // f0 = v[1].cross(v[0]);
+    // f1 = v[2].cross(v[1]);
+    // f2 = v[0].cross(v[2]);
+    // Vector3f p(x,y,1.);
+    // if((p.dot(f0)*f0.dot(v[2])>0) && (p.dot(f1)*f1.dot(v[0])>0) && (p.dot(f2)*f2.dot(v[1])>0))
+    //     return true;
+    // return false;
+    Eigen::Vector2f tri{v[1].x()-v[0].x(),v[1].y()-v[0].y()};
+    Eigen::Vector2f poi{x-v[0].x(),y-v[0].y()};
+    float judge = poi.x()*tri.y()-poi.y()*tri.x();
+    if(judge>=0.0){
+        return false;
+    }
+    tri << v[2].x()-v[1].x(),v[2].y()-v[1].y();
+    poi << x-v[1].x(),y-v[1].y();
+    judge = poi.x()*tri.y()-poi.y()*tri.x();
+    if(judge>=0.0){
+        return false;
+    }
+    tri << v[0].x()-v[2].x(),v[0].y()-v[2].y();
+    poi << x-v[2].x(),y-v[2].y();
+    judge = poi.x()*tri.y()-poi.y()*tri.x();
+    if(judge>=0.0){
+        return false;
+    }
+    return true;
 }
 
 static std::tuple<float, float, float> computeBarycentric2D(float x, float y, const Vector4f* v){
@@ -220,10 +239,7 @@ void rst::rasterizer::draw(std::vector<Triangle *> &TriangleList) {
         };
         //Homogeneous division
         for (auto& vec : v) {
-            vec.x()/=vec.w();
-            vec.y()/=vec.w();
-            vec.z()/=vec.w();
-            vec.w()/=vec.w();
+            vec /= vec.w();
         }
 
         Eigen::Vector4f n[] = {
@@ -237,7 +253,7 @@ void rst::rasterizer::draw(std::vector<Triangle *> &TriangleList) {
         {
             vert.x() = 0.5*width*(vert.x()+1.0);
             vert.y() = 0.5*height*(vert.y()+1.0);
-            vert.z() = vert.z() * f1 + f2;
+            vert.z() = - vert.z() * f1 + f2;
         }
 
         for (int i = 0; i < 3; ++i)

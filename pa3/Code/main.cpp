@@ -98,7 +98,7 @@ Eigen::Vector3f texture_fragment_shader(const fragment_shader_payload& payload)
     if (payload.texture)
     {
         // TODO: Get the texture value at the texture coordinates of the current fragment
-
+        return_color = payload.texture->getColor(payload.tex_coords.x(),payload.tex_coords.y());
     }
     Eigen::Vector3f texture_color;
     texture_color << return_color.x(), return_color.y(), return_color.z();
@@ -126,7 +126,23 @@ Eigen::Vector3f texture_fragment_shader(const fragment_shader_payload& payload)
     {
         // TODO: For each light source in the code, calculate what the *ambient*, *diffuse*, and *specular* 
         // components are. Then, accumulate that result on the *result_color* object.
-
+        Eigen::Vector3f i = (light.position-payload.view_pos).normalized();
+        Eigen::Vector3f v = (eye_pos-payload.view_pos).normalized();
+        Eigen::Vector3f n = payload.normal.normalized();
+        float r=(eye_pos-payload.view_pos).norm();
+        float tmp;
+        //calculate the diffuse
+        Vector3f diffuse=kd.cwiseProduct(light.intensity/r/r);
+        tmp = max(0.0,n.dot(i));
+        diffuse = diffuse*tmp;
+        //calculate the specular
+        Vector3f h=(i+v).normalized();
+        Vector3f specular =ks.cwiseProduct(light.intensity/r/r);
+        tmp = pow(max(0.0,n.dot(h)),p);
+        specular = specular*tmp;
+        //calculate the ambient
+        Vector3f ambient = ka.cwiseProduct(amb_light_intensity);
+        result_color+=(diffuse+specular+ambient);
     }
 
     return result_color * 255.f;
@@ -147,23 +163,27 @@ Eigen::Vector3f phong_fragment_shader(const fragment_shader_payload& payload)
 
     float p = 150;
 
-    Eigen::Vector3f color = payload.color;
-    Eigen::Vector3f point = payload.view_pos;
-    Eigen::Vector3f normal = payload.normal;
-
     Eigen::Vector3f result_color = {0, 0, 0};
     for (auto& light : lights)
     {
         // TODO: For each light source in the code, calculate what the *ambient*, *diffuse*, and *specular* 
         // components are. Then, accumulate that result on the *result_color* object.
-        //calculate the diffuse
+        Eigen::Vector3f i = (light.position-payload.view_pos).normalized();
+        Eigen::Vector3f v = (eye_pos-payload.view_pos).normalized();
+        Eigen::Vector3f n = payload.normal.normalized();
         float r=(eye_pos-payload.view_pos).norm();
-        Vector3f diffuse=kd*(light.intensity/r/r)*max(0,payload.normal.normalized().dot((light.position-payload.view_pos).normalized()));
+        float tmp;
+        //calculate the diffuse
+        Vector3f diffuse=kd.cwiseProduct(light.intensity/r/r);
+        tmp = max(0.0,n.dot(i));
+        diffuse = diffuse*tmp;
         //calculate the specular
-        Vector3f h=((light.position-payload.view_pos)+(eye_pos-payload.view_pos)).normalized();
-        Vector3f specular =ks*(light.intensity/r/r)*pow(max(0,payload.normal.dot(h)),p);
+        Vector3f h=(i+v).normalized();
+        Vector3f specular =ks.cwiseProduct(light.intensity/r/r);
+        tmp = pow(max(0.0,n.dot(h)),p);
+        specular = specular*tmp;
         //calculate the ambient
-        Vector3f ambient = ka*light.intensity;
+        Vector3f ambient = ka.cwiseProduct(amb_light_intensity);
         result_color+=(diffuse+specular+ambient);
     }
 

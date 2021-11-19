@@ -1,3 +1,0 @@
-/home/zhu/Downloads/games101/pa3/Code/build/CMakeFiles/rebuild_cache.dir
-/home/zhu/Downloads/games101/pa3/Code/build/CMakeFiles/edit_cache.dir
-/home/zhu/Downloads/games101/pa3/Code/build/CMakeFiles/Rasterizer.dir

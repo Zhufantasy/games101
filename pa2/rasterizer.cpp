@@ -126,8 +126,8 @@ void rst::rasterizer::draw(pos_buf_id pos_buffer, ind_buf_id ind_buffer, col_buf
         for (int i = 0; i < 3; ++i)
         {
             t.setVertex(i, v[i].head<3>());
-            t.setVertex(i, v[i].head<3>());
-            t.setVertex(i, v[i].head<3>());
+            //t.setVertex(i, v[i].head<3>());
+            //t.setVertex(i, v[i].head<3>());
         }
 
         auto col_x = col[i[0]];
