@@ -237,7 +237,7 @@ void rst::rasterizer::draw(std::vector<Triangle *> &TriangleList) {
         {
             vert.x() = 0.5*width*(vert.x()+1.0);
             vert.y() = 0.5*height*(vert.y()+1.0);
-            vert.z() = vert.z() * f1 + f2;
+            vert.z() = - vert.z() * f1 + f2;
         }
 
         for (int i = 0; i < 3; ++i)
@@ -326,21 +326,21 @@ void rst::rasterizer::rasterize_triangle(const Triangle& t, const std::array<Eig
                 continue;
             }
             //calculate color
-            Vector3f interpolated_col=alpha*t.color[0]+beta*t.color[1]+gamma*t.color[2];
+            Vector3f interpolated_col=interpolate(alpha,beta,gamma,t.color[0],t.color[1],t.color[2],1);
             //calculate normal
-            Vector3f interpolated_nor=alpha*t.normal[0]+beta*t.normal[1]+gamma*t.normal[2];
+            Vector3f interpolated_nor=interpolate(alpha,beta,gamma,t.normal[0],t.normal[1],t.normal[2],1);
             //calculate texcoord
-            Vector2f interpolated_texcoord=alpha*t.tex_coords[0]+beta*t.tex_coords[1]+gamma*t.tex_coords[2];
+            Vector2f interpolated_texcoord=interpolate(alpha,beta,gamma,t.tex_coords[0],t.tex_coords[1],t.tex_coords[2],1);
             //calculate shadingpoint
-            Vector3f interpolated_shadingpoint=alpha*view_pos[0]+beta*view_pos[1]+gamma*view_pos[2];
+            Vector3f interpolated_shadingpoint=interpolate(alpha,beta,gamma,view_pos[1],view_pos[2],view_pos[2],1);
 
             fragment_shader_payload fs_payload{interpolated_col,interpolated_nor,interpolated_texcoord,texture.has_value() ? &texture.value() : nullptr};
             fs_payload.view_pos=interpolated_shadingpoint;
 
-            interpolated_col=fragment_shader(fs_payload);
+            //interpolated_col=fragment_shader(fs_payload);
 
             depth_buf[index]=depth_screen;
-            frame_buf[index]=interpolated_col;
+            frame_buf[index]=fragment_shader(fs_payload);
         }
     }
  

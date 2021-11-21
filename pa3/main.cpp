@@ -53,14 +53,18 @@ Eigen::Matrix4f get_model_matrix(float angle)
 Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio, float zNear, float zFar)
 {
     // TODO: Use the same projection matrix from the previous assignments
-    zNear = zNear;
-    zFar = zFar;
-    Eigen::Matrix4f projection;
-    Eigen::Matrix4f m1;
-    m1 << zNear,0,0,0, 0,zNear,0,0, 0,0,zNear+zFar,-zNear*zFar, 0,0,1,0;
+    Eigen::Matrix4f projection = Eigen::Matrix4f::Identity();
     float angle=eye_fov/360*MY_PI;
+    Eigen::Matrix4f m1;
+    m1 << -zNear,0,0,0, 
+          0,-zNear,0,0, 
+          0,0,-zNear-zFar,-zNear*zFar, 
+          0,0,1,0;
     Eigen::Matrix4f m2;
-    m2 << (1/zNear/tan(angle)),0,0,0, 0,(1/zNear/tan(angle)),0,0, 0,0,(1/(zFar-zNear)),(zNear+zFar)/2, 0,0,0,1;
+    m2 << 1/zNear/tan(angle)/aspect_ratio,0,0,0, 
+          0,1/zNear/tan(angle),0,0, 
+          0,0,1/(zFar-zNear),0, 
+          0,0,0,1;
     projection=m2*m1*projection;
     return projection;
 }
@@ -127,21 +131,23 @@ Eigen::Vector3f texture_fragment_shader(const fragment_shader_payload& payload)
         Eigen::Vector3f i = (light.position-payload.view_pos).normalized();
         Eigen::Vector3f v = (eye_pos-payload.view_pos).normalized();
         Eigen::Vector3f n = payload.normal.normalized();
-        float r=(eye_pos-payload.view_pos).norm();
+        float r2 = (light.position-payload.view_pos).dot(light.position-payload.view_pos);
         float tmp;
         //calculate the diffuse
-        Vector3f diffuse=kd.cwiseProduct(light.intensity/r/r);
+        Vector3f diffuse=kd.cwiseProduct(light.intensity/r2);
         tmp = max(0.0,n.dot(i));
         diffuse = diffuse*tmp;
         //calculate the specular
         Vector3f h=(i+v).normalized();
-        Vector3f specular =ks.cwiseProduct(light.intensity/r/r);
+        Vector3f specular =ks.cwiseProduct(light.intensity/r2);
         tmp = pow(max(0.0,n.dot(h)),p);
         specular = specular*tmp;
-        //calculate the ambient
-        Vector3f ambient = ka.cwiseProduct(amb_light_intensity);
-        result_color+=(diffuse+specular+ambient);
+        result_color=result_color+diffuse+specular;
     }
+
+    //calculate the ambient
+    Vector3f ambient = ka.cwiseProduct(amb_light_intensity);
+    result_color+=ambient;
 
     return result_color * 255.f;
 }
@@ -161,38 +167,31 @@ Eigen::Vector3f phong_fragment_shader(const fragment_shader_payload& payload)
 
     float p = 150;
 
-    Eigen::Vector3f color = payload.color;
-    Eigen::Vector3f point = payload.view_pos;
-    Eigen::Vector3f normal = payload.normal;
-
     Eigen::Vector3f result_color = {0, 0, 0};
     for (auto& light : lights)
-    {
-        // TODO: For each light source in the code, calculate what the *ambient*, *diffuse*, and *specular* 
-        // components are. Then, accumulate that result on the *result_color* object.
-            for (auto& light : lights)
     {
         // TODO: For each light source in the code, calculate what the *ambient*, *diffuse*, and *specular* 
         // components are. Then, accumulate that result on the *result_color* object.
         Eigen::Vector3f i = (light.position-payload.view_pos).normalized();
         Eigen::Vector3f v = (eye_pos-payload.view_pos).normalized();
         Eigen::Vector3f n = payload.normal.normalized();
-        float r=(eye_pos-payload.view_pos).norm();
+        float r2 = (light.position-payload.view_pos).dot(light.position-payload.view_pos);
         float tmp;
         //calculate the diffuse
-        Vector3f diffuse=kd.cwiseProduct(light.intensity/r/r);
+        Vector3f diffuse=kd.cwiseProduct(light.intensity/r2);
         tmp = max(0.0,n.dot(i));
         diffuse = diffuse*tmp;
         //calculate the specular
         Vector3f h=(i+v).normalized();
-        Vector3f specular =ks.cwiseProduct(light.intensity/r/r);
+        Vector3f specular =ks.cwiseProduct(light.intensity/r2);
         tmp = pow(max(0.0,n.dot(h)),p);
         specular = specular*tmp;
-        //calculate the ambient
-        Vector3f ambient = ka.cwiseProduct(amb_light_intensity);
-        result_color+=(diffuse+specular+ambient);
+        result_color=result_color+diffuse+specular;
     }
-    }
+
+    //calculate the ambient
+    Vector3f ambient = ka.cwiseProduct(amb_light_intensity);
+    result_color+=ambient;
 
     return result_color * 255.f;
 }
