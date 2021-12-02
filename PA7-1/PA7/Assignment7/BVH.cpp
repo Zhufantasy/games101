@@ -1,6 +1,5 @@
 #include <algorithm>
 #include <cassert>
-#include <queue>
 #include "BVH.hpp"
 
 BVHAccel::BVHAccel(std::vector<Object*> p, int maxPrimsInNode,
@@ -40,6 +39,7 @@ BVHBuildNode* BVHAccel::recursiveBuild(std::vector<Object*> objects)
         node->object = objects[0];
         node->left = nullptr;
         node->right = nullptr;
+        node->area = objects[0]->getArea();
         return node;
     }
     else if (objects.size() == 2) {
@@ -47,6 +47,7 @@ BVHBuildNode* BVHAccel::recursiveBuild(std::vector<Object*> objects)
         node->right = recursiveBuild(std::vector{objects[1]});
 
         node->bounds = Union(node->left->bounds, node->right->bounds);
+        node->area = node->left->area + node->right->area;
         return node;
     }
     else {
@@ -89,6 +90,7 @@ BVHBuildNode* BVHAccel::recursiveBuild(std::vector<Object*> objects)
         node->right = recursiveBuild(rightshapes);
 
         node->bounds = Union(node->left->bounds, node->right->bounds);
+        node->area = node->left->area + node->right->area;
     }
 
     return node;
@@ -106,40 +108,22 @@ Intersection BVHAccel::Intersect(const Ray& ray) const
 Intersection BVHAccel::getIntersection(BVHBuildNode* node, const Ray& ray) const
 {
     // TODO Traverse the BVH to find intersection
-    Intersection res{},tmp{};
-    std::queue<BVHBuildNode*> que;
-    BVHBuildNode* cur_node;
-    que.push(node);
-    while(!que.empty()){
-        cur_node = que.front();
-        que.pop();
-        std::array<int, 3> dirIsNeg =  std::array<int, 3>{ray.direction[0]>0.0?1:-1,ray.direction[1]>0.0?1:-1,ray.direction[2]>0.0?1:-1};
-        if(node->bounds.IntersectP(ray,ray.direction_inv,dirIsNeg)){
-            if(cur_node->left!=nullptr){
-                que.push(cur_node->left);
-            }
-            if(cur_node->right!=nullptr){
-                que.push(cur_node->right);
-            }
-            if(cur_node->left==nullptr && cur_node->right==nullptr){
-                tmp = node->object->getIntersection(ray);
-                tmp.obj = node->object;
-                if(tmp.happened==false){
-                   //nothing 
-                }
-                else{
-                    if(res.happened==false){
-                        res=tmp;
-                    }
-                    else{
-                        if(tmp.distance>res.distance){
-                            res=tmp;
-                        }
-                    }
-                }
 
-            }
-        }
+}
+
+
+void BVHAccel::getSample(BVHBuildNode* node, float p, Intersection &pos, float &pdf){
+    if(node->left == nullptr || node->right == nullptr){
+        node->object->Sample(pos, pdf);
+        pdf *= node->area;
+        return;
     }
-    return res;
+    if(p < node->left->area) getSample(node->left, p, pos, pdf);
+    else getSample(node->right, p - node->left->area, pos, pdf);
+}
+
+void BVHAccel::Sample(Intersection &pos, float &pdf){
+    float p = std::sqrt(get_random_float()) * root->area;
+    getSample(root, p, pos, pdf);
+    pdf /= root->area;
 }
