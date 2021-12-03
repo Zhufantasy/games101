@@ -47,6 +47,11 @@
         "stdexcept": "cpp",
         "streambuf": "cpp",
         "cinttypes": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "cstring": "cpp",
+        "condition_variable": "cpp",
+        "map": "cpp",
+        "mutex": "cpp",
+        "thread": "cpp"
     }
 }

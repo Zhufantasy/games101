@@ -4,11 +4,11 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/zhu/Downloads/games101/PA6/BVH.cpp" "/home/zhu/Downloads/games101/PA6/build/CMakeFiles/RayTracing.dir/BVH.cpp.o"
-  "/home/zhu/Downloads/games101/PA6/Renderer.cpp" "/home/zhu/Downloads/games101/PA6/build/CMakeFiles/RayTracing.dir/Renderer.cpp.o"
-  "/home/zhu/Downloads/games101/PA6/Scene.cpp" "/home/zhu/Downloads/games101/PA6/build/CMakeFiles/RayTracing.dir/Scene.cpp.o"
-  "/home/zhu/Downloads/games101/PA6/Vector.cpp" "/home/zhu/Downloads/games101/PA6/build/CMakeFiles/RayTracing.dir/Vector.cpp.o"
-  "/home/zhu/Downloads/games101/PA6/main.cpp" "/home/zhu/Downloads/games101/PA6/build/CMakeFiles/RayTracing.dir/main.cpp.o"
+  "/home/sqa/Downloads/games101/PA6/BVH.cpp" "/home/sqa/Downloads/games101/PA6/build/CMakeFiles/RayTracing.dir/BVH.cpp.o"
+  "/home/sqa/Downloads/games101/PA6/Renderer.cpp" "/home/sqa/Downloads/games101/PA6/build/CMakeFiles/RayTracing.dir/Renderer.cpp.o"
+  "/home/sqa/Downloads/games101/PA6/Scene.cpp" "/home/sqa/Downloads/games101/PA6/build/CMakeFiles/RayTracing.dir/Scene.cpp.o"
+  "/home/sqa/Downloads/games101/PA6/Vector.cpp" "/home/sqa/Downloads/games101/PA6/build/CMakeFiles/RayTracing.dir/Vector.cpp.o"
+  "/home/sqa/Downloads/games101/PA6/main.cpp" "/home/sqa/Downloads/games101/PA6/build/CMakeFiles/RayTracing.dir/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

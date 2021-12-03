@@ -237,6 +237,7 @@ inline Intersection Triangle::getIntersection(Ray ray)
     inter.distance = dotProduct(t_tmp*ray.direction,t_tmp*ray.direction);
     inter.normal = normal;
     inter.m = this->m;
+    inter.obj = this;
     return inter;
 }
 

@@ -123,7 +123,6 @@ Intersection BVHAccel::getIntersection(BVHBuildNode* node, const Ray& ray) const
             }
             if(cur_node->left==nullptr && cur_node->right==nullptr){
                 tmp = cur_node->object->getIntersection(ray);
-                tmp.obj = cur_node->object;
                 if(tmp.happened==false){
                    //nothing 
                 }

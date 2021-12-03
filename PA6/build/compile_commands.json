@@ -1,0 +1,27 @@
+[
+{
+  "directory": "/home/sqa/Downloads/games101/PA6/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9    -g   -std=gnu++17 -o CMakeFiles/RayTracing.dir/main.cpp.o -c /home/sqa/Downloads/games101/PA6/main.cpp",
+  "file": "/home/sqa/Downloads/games101/PA6/main.cpp"
+},
+{
+  "directory": "/home/sqa/Downloads/games101/PA6/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9    -g   -std=gnu++17 -o CMakeFiles/RayTracing.dir/Vector.cpp.o -c /home/sqa/Downloads/games101/PA6/Vector.cpp",
+  "file": "/home/sqa/Downloads/games101/PA6/Vector.cpp"
+},
+{
+  "directory": "/home/sqa/Downloads/games101/PA6/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9    -g   -std=gnu++17 -o CMakeFiles/RayTracing.dir/Scene.cpp.o -c /home/sqa/Downloads/games101/PA6/Scene.cpp",
+  "file": "/home/sqa/Downloads/games101/PA6/Scene.cpp"
+},
+{
+  "directory": "/home/sqa/Downloads/games101/PA6/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9    -g   -std=gnu++17 -o CMakeFiles/RayTracing.dir/BVH.cpp.o -c /home/sqa/Downloads/games101/PA6/BVH.cpp",
+  "file": "/home/sqa/Downloads/games101/PA6/BVH.cpp"
+},
+{
+  "directory": "/home/sqa/Downloads/games101/PA6/build",
+  "command": "/bin/x86_64-linux-gnu-g++-9    -g   -std=gnu++17 -o CMakeFiles/RayTracing.dir/Renderer.cpp.o -c /home/sqa/Downloads/games101/PA6/Renderer.cpp",
+  "file": "/home/sqa/Downloads/games101/PA6/Renderer.cpp"
+}
+]
