@@ -1,3 +1,0 @@
-/home/sqa/Downloads/games101/PA6/build/CMakeFiles/rebuild_cache.dir
-/home/sqa/Downloads/games101/PA6/build/CMakeFiles/edit_cache.dir
-/home/sqa/Downloads/games101/PA6/build/CMakeFiles/RayTracing.dir
